@@ -28,6 +28,7 @@ var allFeeds = [
  * function when the API is loaded.
  */
 function init() {
+
     // Load the first feed we've defined (index of 0).
     loadFeed(0);
 }
@@ -41,33 +42,39 @@ function init() {
  * which will be called after everything has run successfully.
  */
  function loadFeed(id, cb) {
-     var feedUrl = allFeeds[id].url,
+    var feedUrl = allFeeds[id].url,
          feedName = allFeeds[id].name;
 
-     $.ajax({
+
+    $.ajax({
        type: "POST",
        url: 'https://rsstojson.udacity.com/parseFeed',
        data: JSON.stringify({url: feedUrl}),
        contentType:"application/json",
        success: function (result, status){
 
-                 var container = $('.feed'),
-                     title = $('.header-title'),
-                     entries = result.feed.entries,
-                     entriesLen = entries.length,
-                     entryTemplate = Handlebars.compile($('.tpl-entry').html());
+                var container = $('.feed'),
+                    title = $('.header-title'),
+                    entries = result.feed.entries,
+                    entriesLen = entries.length,
+                    entryTemplate = Handlebars.compile($('.tpl-entry').html());
 
-                 title.html(feedName);   // Set the header text
-                 container.empty();      // Empty out all previous entries
+                title.html(feedName);   // Set the header text
+                container.empty();      // Empty out all previous entries
 
-                 /* Loop through the entries we just loaded via the Google
+                // Throws an error if the allFeeds is undefined or null
+                if (isUndefined(entries)) { throw (new Error('There are no entries')); }
+                /* Loop through the entries we just loaded via the Google
                   * Feed Reader API. We'll then parse that entry against the
                   * entryTemplate (created above using Handlebars) and append
                   * the resulting HTML to the list of entries on the page.
                   */
-                 entries.forEach(function(entry) {
-                     container.append(entryTemplate(entry));
-                 });
+                if(entriesLen > 0) {
+                    entries.forEach(function(entry) {
+                        container.append(entryTemplate(entry));
+                    });
+                 }
+
 
                  if (cb) {
                      cb();
@@ -82,6 +89,13 @@ function init() {
        dataType: "json"
      });
  }
+
+/* It checks the value of the variable if it
+ * is defined or null.
+ */
+function isUndefined(value) {
+    return (typeof value === 'undefined' || value === null);
+}
 
 /* Google API: Loads the Feed Reader API and defines what function
  * to call when the Feed Reader API is done loading.
@@ -99,6 +113,9 @@ $(function() {
         feedItemTemplate = Handlebars.compile($('.tpl-feed-list-item').html()),
         feedId = 0,
         menuIcon = $('.menu-icon-link');
+
+    // Throws an error if the allFeeds is undefined or null
+    if (isUndefined(allFeeds)) { throw (new Error('There are no Feeds')); }
 
     /* Loop through all of our feeds, assigning an id property to
      * each of the feeds based upon its index within the array.
