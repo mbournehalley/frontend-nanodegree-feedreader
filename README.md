@@ -5,7 +5,7 @@ In this project you are given a web-based application that reads RSS feeds. The 
 
 ## How to run this Project.
 1. Fork/Clone this project to your local!
-2. Create your feature branch: 'git checkout https://github.com/mbournehalley/frontend-nanodegree-feedreader.git'
+2. Create your feature branch: `git checkout https://github.com/mbournehalley/frontend-nanodegree-feedreader.git`
 2. Go to the directory frontend-nanodegree-feedreader.
 3. Open the index.html on a browser. Recommended browser is Chrome.
 4. To see the unit test cases go to the bottom of the page.
